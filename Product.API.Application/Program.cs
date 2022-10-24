@@ -8,11 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("Microservices"));
-
 builder.Services.AddScoped<IProductManager, ProductManager>();
 builder.Services.AddScoped<IProductDAL, ProductDAL>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+var connection = builder.Configuration.GetConnectionString("ProductConn");
+builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(connection));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -34,6 +35,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-InitializeDb.Initialize(app);
+// InitializeDb.Initialize(app);
 
 app.Run();
