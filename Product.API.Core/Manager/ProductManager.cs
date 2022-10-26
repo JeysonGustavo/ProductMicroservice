@@ -12,11 +12,11 @@ namespace Product.API.Core.Manager
             _productDAL = productDAL;
         }
 
-        public void CreateProduct(ProductModel product) => _productDAL.CreateProduct(product);
-        public IEnumerable<ProductModel> GetAllProducts() => _productDAL.GetAllProducts();
+        public async Task CreateProduct(ProductModel product) => await _productDAL.CreateProduct(product);
+        public async Task<IEnumerable<ProductModel>> GetAllProducts() => await _productDAL.GetAllProducts();
 
-        public ProductModel? GetProductById(int id) => _productDAL.GetProductById(id);
+        public async Task<ProductModel?> GetProductById(int id) => await _productDAL.GetProductById(id);
 
-        public bool SaveChanges() => _productDAL.SaveChanges();
+        public async Task<bool> SaveChanges() => await _productDAL.SaveChanges();
     }
 }

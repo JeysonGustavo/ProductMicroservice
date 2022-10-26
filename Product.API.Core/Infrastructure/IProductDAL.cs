@@ -4,12 +4,12 @@ namespace Product.API.Core.Infrastructure
 {
     public interface IProductDAL
     {
-        bool SaveChanges();
+        Task<bool> SaveChanges();
 
-        IEnumerable<ProductModel> GetAllProducts();
+        Task<IEnumerable<ProductModel>> GetAllProducts();
 
-        ProductModel? GetProductById(int id);
+        Task<ProductModel?> GetProductById(int id);
 
-        void CreateProduct(ProductModel product);
+        Task CreateProduct(ProductModel product);
     }
 }

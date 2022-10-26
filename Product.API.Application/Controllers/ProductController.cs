@@ -21,17 +21,17 @@ namespace Product.API.Application.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<ProductResponseModel>> GetAllProducts()
+        public async Task<ActionResult> GetAllProducts()
         {
-            var products = _productManager.GetAllProducts();
+            var products = await _productManager.GetAllProducts();
 
             return Ok(_mapper.Map<IEnumerable<ProductResponseModel>>(products));
         }
 
         [HttpGet("{id}", Name="GetProductById")]
-        public ActionResult<ProductResponseModel> GetProductById(int id)
+        public async Task<ActionResult> GetProductById(int id)
         {
-            var product = _productManager.GetProductById(id);
+            var product = await _productManager.GetProductById(id);
 
             if (product is null)
                 return NotFound();
@@ -40,14 +40,13 @@ namespace Product.API.Application.Controllers
         }
 
         [HttpPost]
-        public ActionResult<ProductResponseModel> CreateProduct(ProductRequestModel requestModel)
+        public async Task<ActionResult> CreateProduct(ProductRequestModel requestModel)
         {
             var product = _mapper.Map<ProductModel>(requestModel);
 
-            _productManager.CreateProduct(product);
-            _productManager.SaveChanges();
+            await _productManager.CreateProduct(product);
 
-            var response = _productManager.GetProductById(product.Id);
+            var response = await _productManager.GetProductById(product.Id);
             return Ok(_mapper.Map<ProductResponseModel>(response));
         }
     }

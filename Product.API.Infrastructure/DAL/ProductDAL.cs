@@ -14,18 +14,30 @@ namespace Product.API.Infrastructure.DAL
             _context = context;
         }
 
-        public void CreateProduct(ProductModel product)
+        public async Task CreateProduct(ProductModel product)
         {
-            if (product is null)
-                throw new ArgumentNullException(nameof(product));
+            using var transaction = _context.Database.BeginTransaction();
 
-            _context.Products.Add(product);
+            try
+            {
+                if (product is null)
+                    throw new ArgumentNullException(nameof(product));
+
+                await _context.Products.AddAsync(product);
+                await _context.SaveChangesAsync();
+
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+            }
         }
 
-        public IEnumerable<ProductModel> GetAllProducts() => _context.Products.Include(x => x.Category).ToList().OrderBy(x => x.Id);
+        public async Task<IEnumerable<ProductModel>> GetAllProducts() => await _context.Products.Include(x => x.Category).OrderBy(x => x.Id).ToListAsync();
 
-        public ProductModel? GetProductById(int id) => _context.Products.Include(p => p.Category).FirstOrDefault(p => p.Id.Equals(id));
+        public async Task<ProductModel?> GetProductById(int id) => await _context.Products.Include(p => p.Category).FirstOrDefaultAsync(p => p.Id.Equals(id));
 
-        public bool SaveChanges() => _context.SaveChanges() > 0;
+        public async Task<bool> SaveChanges() => await _context.SaveChangesAsync() > 0;
     }
 }
