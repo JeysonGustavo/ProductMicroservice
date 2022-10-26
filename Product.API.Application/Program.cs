@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Product.API.Core.EventBus;
 using Product.API.Core.Infrastructure;
 using Product.API.Core.Manager;
 using Product.API.Infrastructure.DAL;
@@ -10,12 +11,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IProductManager, ProductManager>();
 builder.Services.AddScoped<IProductDAL, ProductDAL>();
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var connection = builder.Configuration.GetConnectionString("ProductConn");
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(connection));
 
 builder.Services.AddControllers();
+
+builder.Services.AddHostedService<EventBusSubscriber>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
