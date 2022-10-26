@@ -19,7 +19,7 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(connection))
 
 builder.Services.AddControllers();
 
-// builder.Services.AddHostedService<EventBusSubscriber>();
+builder.Services.AddHostedService<EventBusSubscriber>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
